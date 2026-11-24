@@ -3,6 +3,7 @@
 서울시 상권분석서비스 데이터로 "서울에서 커피 장사가 잘되는 곳은 어디인가?" 를 분석하고,
 결과를 **FastAPI + HTML/CSS/JS 대시보드**로 만드는 프로젝트 교안과 예제 코드입니다.
 
+- **배포된 대시보드: https://seoul-cafe-analysis.onrender.com** (무료 서버라 한동안 접속이 없으면 첫 화면이 뜨는 데 수십 초 걸립니다) · API 문서 [/docs](https://seoul-cafe-analysis.onrender.com/docs)
 - 교안: [서울커피상권분석_프로젝트교안.pdf](서울커피상권분석_프로젝트교안.pdf) (36쪽) · 원고 `guide/*.md`
 - 분석: NumPy · pandas · seaborn (`analysis/`)
 - 서비스: FastAPI (`service/main.py`) + HTML/CSS/JS + Chart.js (`service/static/`)
@@ -40,6 +41,11 @@ uvicorn service.main:app --reload     # http://127.0.0.1:8000 , API 문서 /docs
 | 7 | 마무리 - 확장 아이디어, 발표, 점검표, 평가 기준 |
 
 교안 PDF 다시 만들기: `python tools/build_guide.py` (그림: `python tools/make_figures.py`)
+
+## 배포 (Render)
+
+`render.yaml` 에 설정이 들어 있습니다. Render 대시보드 → **New → Blueprint** → 이 저장소 → **Deploy Blueprint**.
+이후 `main` 에 push 하면 자동으로 다시 배포됩니다.
 
 ## 데이터 출처
 
