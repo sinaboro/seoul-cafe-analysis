@@ -22,7 +22,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 16px; display: grid; gap
 .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
 .card span { display: block; color: #8a7a6b; font-size: 13px; }
-.card b { font-size: 24px; color: var(--coffee); }
+.card b { font-size: 24px; color: var(--coffee); word-break: keep-all; }   /* 한글 낱말 중간에서 줄이 바뀌지 않게 */
 
 /* 차트: 첫 번째(자치구)는 넓게, 나머지 두 개는 나란히 */
 .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -47,5 +47,6 @@ footer { text-align: center; color: #8a7a6b; font-size: 12px; padding: 20px; }
 /* ④ 화면이 좁으면 한 줄에 하나씩 */
 @media (max-width: 760px) {
   .cards, .sliders { grid-template-columns: 1fr 1fr; }
+  .card b { font-size: 19px; }                    /* 좁은 화면에서는 숫자를 조금 작게 */
   .charts { grid-template-columns: 1fr; }
 }
