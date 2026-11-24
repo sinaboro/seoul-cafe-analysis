@@ -4,7 +4,7 @@
 결과를 **FastAPI + HTML/CSS/JS 대시보드**로 만드는 프로젝트 교안과 예제 코드입니다.
 
 - **배포된 대시보드: https://seoul-cafe-analysis.onrender.com** (무료 서버라 한동안 접속이 없으면 첫 화면이 뜨는 데 수십 초 걸립니다) · API 문서 [/docs](https://seoul-cafe-analysis.onrender.com/docs)
-- 교안: [서울커피상권분석_프로젝트교안.pdf](서울커피상권분석_프로젝트교안.pdf) (36쪽) · 원고 `guide/*.md`
+- 교안: [서울커피상권분석_프로젝트교안.pdf](서울커피상권분석_프로젝트교안.pdf) (40쪽) · 원고 `guide/*.md`
 - 분석: NumPy · pandas · seaborn (`analysis/`)
 - 서비스: FastAPI (`service/main.py`) + HTML/CSS/JS + Chart.js (`service/static/`)
 
@@ -39,6 +39,7 @@ uvicorn service.main:app --reload     # http://127.0.0.1:8000 , API 문서 /docs
 | 5 | 분석 API - FastAPI, 쿼리 매개변수, 404/400 |
 | 6 | 대시보드 - fetch, Chart.js, 이벤트 |
 | 7 | 마무리 - 확장 아이디어, 발표, 점검표, 평가 기준 |
+| 8 | 배포하기 - Render Blueprint, 자동 재배포, 자주 막히는 곳 |
 
 교안 PDF 다시 만들기: `python tools/build_guide.py` (그림: `python tools/make_figures.py`)
 
