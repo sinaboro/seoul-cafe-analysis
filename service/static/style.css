@@ -1,0 +1,51 @@
+/* style.css - 대시보드 화면 모양
+   ── 전체 흐름 ──
+   ① 색과 글꼴 (커피색 계열)
+   ② 머리글, 카드, 차트 칸을 격자(grid)로 배치
+   ③ 슬라이더와 표
+   ④ 좁은 화면(휴대폰)에서는 한 줄에 하나씩 */
+
+/* ① 색은 변수로 모아 두면 한 곳만 바꿔도 전체가 바뀐다 */
+:root { --coffee: #6F4E37; --latte: #C08552; --bg: #faf7f2; --card: #fff; --line: #e8e0d6; --ink: #2b2118; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+
+/* ② 머리글 */
+header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+         padding: 16px 24px; background: var(--coffee); color: #fff; }
+header h1 { margin: 0; font-size: 22px; }
+header select { margin-left: 8px; padding: 6px 10px; border-radius: 6px; border: 0; font-size: 15px; }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 16px; display: grid; gap: 16px; }
+
+/* 카드 4개를 한 줄에 */
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.card span { display: block; color: #8a7a6b; font-size: 13px; }
+.card b { font-size: 24px; color: var(--coffee); }
+
+/* 차트: 첫 번째(자치구)는 넓게, 나머지 두 개는 나란히 */
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.panel.wide { grid-column: 1 / -1; }
+.panel h2 { margin: 0 0 10px; font-size: 16px; }
+.hint { margin: -4px 0 12px; color: #8a7a6b; font-size: 13px; }
+
+/* ③ 슬라이더 4개 */
+.sliders { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.sliders label { font-size: 13px; }
+.sliders input { width: 100%; accent-color: var(--coffee); }
+.sliders output { font-weight: bold; color: var(--coffee); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; }
+th:nth-child(2), th:nth-child(3), td:nth-child(2), td:nth-child(3) { text-align: left; }
+thead th { background: #f3ece3; }
+td.score { font-weight: bold; color: var(--coffee); }
+footer { text-align: center; color: #8a7a6b; font-size: 12px; padding: 20px; }
+
+/* ④ 화면이 좁으면 한 줄에 하나씩 */
+@media (max-width: 760px) {
+  .cards, .sliders { grid-template-columns: 1fr 1fr; }
+  .charts { grid-template-columns: 1fr; }
+}

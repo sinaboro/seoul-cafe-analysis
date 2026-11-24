@@ -1,0 +1,67 @@
+<!doctype html>
+<!--
+  index.html - 서울 커피 상권 대시보드 화면 (뼈대)
+  ── 전체 흐름 ──
+  ① 위쪽: 제목 + 자치구 선택 상자
+  ② 카드 4개: 분기, 매출, 점포 수, 프랜차이즈 비율  (app.js 가 /api/summary 로 채운다)
+  ③ 차트 3개: 자치구별 매출, 분기별 추이, 시간대 비중  (Chart.js 로 그린다)
+  ④ 창업 추천: 가중치 슬라이더 4개 + 상위 10 표  (슬라이더를 움직이면 /api/score 를 다시 부른다)
+-->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>서울 커피 상권 대시보드</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 차트 라이브러리 Chart.js (인터넷에서 불러온다) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- ① 제목과 자치구 선택 -->
+  <header>
+    <h1>☕ 서울 커피 상권 대시보드</h1>
+    <label>자치구
+      <select id="gu-select">
+        <option value="">서울 전체</option>   <!-- 나머지 자치구는 app.js 가 채운다 -->
+      </select>
+    </label>
+  </header>
+
+  <main>
+    <!-- ② 요약 카드 -->
+    <section class="cards">
+      <div class="card"><span>기준 분기</span><b id="c-quarter">-</b></div>
+      <div class="card"><span>커피 매출</span><b id="c-sales">-</b></div>
+      <div class="card"><span>점포 수</span><b id="c-stores">-</b></div>
+      <div class="card"><span>프랜차이즈 비율</span><b id="c-frc">-</b></div>
+    </section>
+
+    <!-- ③ 차트 3개 -->
+    <section class="charts">
+      <div class="panel wide"><h2>자치구별 매출 (억 원)</h2><canvas id="chart-gu"></canvas></div>
+      <div class="panel"><h2>분기별 매출 추이 (억 원)</h2><canvas id="chart-trend"></canvas></div>
+      <div class="panel"><h2>시간대별 매출 비중 (%)</h2><canvas id="chart-time"></canvas></div>
+    </section>
+
+    <!-- ④ 창업 추천 점수 -->
+    <section class="panel">
+      <h2>카페 창업 추천 행정동 TOP 10</h2>
+      <p class="hint">슬라이더로 지표의 중요도(가중치)를 바꾸면 순위가 다시 계산됩니다.</p>
+      <div class="sliders">
+        <label>점포당 매출 <input type="range" id="w-sales" min="0" max="100" value="35"><output>35</output></label>
+        <label>유동인구(수요) <input type="range" id="w-demand" min="0" max="100" value="25"><output>25</output></label>
+        <label>매출 성장 <input type="range" id="w-growth" min="0" max="100" value="20"><output>20</output></label>
+        <label>안정(낮은 폐업률) <input type="range" id="w-stable" min="0" max="100" value="20"><output>20</output></label>
+      </div>
+      <table>
+        <thead><tr><th>순위</th><th>자치구</th><th>행정동</th><th>추천 점수</th>
+          <th>매출</th><th>수요</th><th>성장</th><th>안정</th><th>점포 수</th></tr></thead>
+        <tbody id="score-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>데이터: 서울 열린데이터광장 「서울시 상권분석서비스」 (추정매출·점포·인구, 행정동) · 공공누리 제1유형</footer>
+  <script src="app.js"></script>
+</body>
+</html>
