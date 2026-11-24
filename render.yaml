@@ -1,0 +1,14 @@
+# render.yaml - Render 배포 설정 (Blueprint)
+# Render 대시보드에서 New → Blueprint 로 이 저장소를 고르면 아래 설정으로 웹 서비스를 만든다.
+# (New → Web Service 로 직접 만들 때도 아래 값을 그대로 입력하면 된다)
+services:
+  - type: web
+    name: seoul-cafe-analysis          # 주소가 https://seoul-cafe-analysis.onrender.com 처럼 된다 (이미 있으면 뒤에 글자가 붙음)
+    runtime: python
+    plan: free                         # 무료 요금제 - 접속이 없으면 잠들고, 첫 접속 때 깨어나느라 수십 초 걸린다
+    buildCommand: pip install -r requirements.txt
+    # Render 가 정해 주는 포트($PORT)로, 바깥에서 접속할 수 있게 0.0.0.0 에서 실행한다
+    startCommand: uvicorn service.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION            # .python-version 파일과 같은 버전
+        value: "3.12.8"
