@@ -6,6 +6,7 @@ main.py - 서울 커피 상권 분석 결과를 JSON 으로 돌려주는 FastAPI
 ② /api/... 주소마다 pandas 로 필요한 표를 만들어 JSON(딕셔너리 목록)으로 돌려준다
 ③ /api/score 는 화면에서 보낸 가중치로 창업 추천 점수를 그때그때 다시 계산한다 (analysis/scoring.py)
 ④ 주소 / 로 들어오면 static/index.html 화면을 보여 준다
+⑤ (9장 지도) /api/stores 는 커피숍 위치 점, /api/dong-geo 는 행정동 경계선, /api/map 은 동마다 색칠할 점수
 
 실행 (프로젝트 폴더에서):  uvicorn service.main:app --reload
 브라우저:  http://127.0.0.1:8000   ·  API 문서: http://127.0.0.1:8000/docs
@@ -15,6 +16,8 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -31,7 +34,13 @@ LATEST = LAST["분기"].iloc[0]
 SCORE_BASE = add_growth(LAST, Q)                         # 점수 계산에 쓸 표 (성장률까지 붙인 것)
 SCORE_BASE = SCORE_BASE[SCORE_BASE["점포수"] >= 10]      # 점포 10곳 미만 동은 제외 (04 와 같은 기준)
 
+# ⑤ 지도용 데이터 (05·06 스크립트가 만든 파일)
+STORES = pd.read_csv(CLEAN / "커피숍_위치.csv", dtype={"개업일": str})
+DONG_GEO = CLEAN / "서울_행정동.geojson"
+
 app = FastAPI(title="서울 커피 상권 분석 API")
+# 응답이 1KB 보다 크면 압축(gzip)해서 보낸다. 커피숍 1만 4천 곳 목록(약 2.7MB)이 약 1/5(0.6MB) 로 줄어든다
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 
 def quarter_label(code):
@@ -101,6 +110,34 @@ def score(w_sales: float = 35, w_demand: float = 25, w_growth: float = 20, w_sta
     ranked = pick_gu(ranked, gu).head(top)
     cols = ["자치구", "행정동", "추천점수", "매출점수", "수요점수", "성장점수", "안정점수", "점포수"]
     return ranked[cols].round(1).to_dict(orient="records")
+
+
+# ⑤ 지도 ─────────────────────────────────────────────
+@app.get("/api/stores")
+def stores(gu: str = ""):
+    """영업 중인 커피숍 위치. gu 를 주면 그 자치구만 (서울 전체는 약 1만 4천 곳)"""
+    d = pick_gu(STORES, gu)
+    return d[["상호", "주소", "개업일", "위도", "경도"]].to_dict(orient="records")
+
+
+@app.get("/api/dong-geo")
+def dong_geo():
+    """서울 행정동 경계선(GeoJSON). 파일을 그대로 보낸다"""
+    return FileResponse(DONG_GEO, media_type="application/geo+json")
+
+
+@app.get("/api/map")
+def map_scores(w_sales: float = 35, w_demand: float = 25, w_growth: float = 20, w_stable: float = 20):
+    """행정동마다 지도 색에 쓸 값. {행정동코드: {추천점수, 점포수, ...}} 모양으로 돌려준다
+    슬라이더 가중치가 같으면 /api/score 의 표와 같은 점수다 (점포 10곳 미만 동은 빠진다)"""
+    weights = {"매출": w_sales, "수요": w_demand, "성장": w_growth, "안정": w_stable}
+    if sum(weights.values()) <= 0:
+        raise HTTPException(status_code=400, detail="가중치를 하나 이상 0 보다 크게 주세요")
+    ranked = startup_score(SCORE_BASE, weights)
+    ranked["순위"] = range(1, len(ranked) + 1)                 # 점수 높은 순으로 1, 2, 3, ...
+    ranked["매출_억원"] = ranked["매출액"] / EOK
+    cols = ["행정동코드", "순위", "추천점수", "점포수", "매출_억원"]
+    return ranked[cols].round(1).set_index("행정동코드").to_dict(orient="index")
 
 
 # ④ 화면 파일 (index.html, style.css, app.js). API 주소보다 뒤에 붙여야 /api/... 가 가려지지 않는다

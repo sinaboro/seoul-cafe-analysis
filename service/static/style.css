@@ -43,6 +43,14 @@ th, td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: rig
 th:nth-child(2), th:nth-child(3), td:nth-child(2), td:nth-child(3) { text-align: left; }
 thead th { background: #f3ece3; }
 td.score { font-weight: bold; color: var(--coffee); }
+/* ⑤ 지도: Leaflet 지도는 상자 높이가 0 이면 아무것도 안 보이므로 높이를 꼭 준다 */
+#map { height: 560px; border-radius: 8px; border: 1px solid var(--line); }
+.map-option { display: inline-block; margin-bottom: 10px; font-size: 14px; }
+#store-count { color: #8a7a6b; }
+.legend { background: #fff; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 18px;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
+.legend i { display: inline-block; width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; }
+
 footer { text-align: center; color: #8a7a6b; font-size: 12px; padding: 20px; }
 
 /* ④ 화면이 좁으면 한 줄에 하나씩 */
@@ -50,4 +58,5 @@ footer { text-align: center; color: #8a7a6b; font-size: 12px; padding: 20px; }
   .cards, .sliders { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .card b { font-size: 19px; }                    /* 좁은 화면에서는 숫자를 조금 작게 */
   .charts { grid-template-columns: minmax(0, 1fr); }
+  #map { height: 420px; }                         /* 휴대폰에서는 지도를 조금 낮게 */
 }

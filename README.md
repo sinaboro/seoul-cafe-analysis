@@ -6,7 +6,7 @@
 - **배포된 대시보드: https://seoul-cafe-analysis.onrender.com** (무료 서버라 한동안 접속이 없으면 첫 화면이 뜨는 데 수십 초 걸립니다) · API 문서 [/docs](https://seoul-cafe-analysis.onrender.com/docs)
 - 교안: [서울커피상권분석_프로젝트교안.pdf](서울커피상권분석_프로젝트교안.pdf) (40쪽) · 원고 `guide/*.md`
 - 분석: NumPy · pandas · seaborn (`analysis/`)
-- 서비스: FastAPI (`service/main.py`) + HTML/CSS/JS + Chart.js (`service/static/`)
+- 서비스: FastAPI (`service/main.py`) + HTML/CSS/JS + Chart.js + Leaflet 지도 (`service/static/`)
 
 ![대시보드](guide/images/ui_dashboard.png)
 
@@ -20,6 +20,7 @@ pip install -r requirements.txt
 python analysis/02_데이터정리.py      # data/raw → data/clean
 python analysis/03_탐색분석.py        # 그래프 → images/
 python analysis/04_창업점수.py        # 창업 추천 점수
+# (9장 지도용 data/clean/커피숍_위치.csv, 서울_행정동.geojson 은 이미 들어 있다. 새로 받으려면 05, 06 실행)
 uvicorn service.main:app --reload     # http://127.0.0.1:8000 , API 문서 /docs
 ```
 
@@ -40,6 +41,7 @@ uvicorn service.main:app --reload     # http://127.0.0.1:8000 , API 문서 /docs
 | 6 | 대시보드 - fetch, Chart.js, 이벤트 |
 | 7 | 마무리 - 확장 아이디어, 발표, 점검표, 평가 기준 |
 | 8 | 배포하기 - Render Blueprint, 자동 재배포, 자주 막히는 곳 |
+| 9 | 지도 추가 - 커피숍 위치(인허가 API, pyproj 좌표 변환), 행정동 GeoJSON, Leaflet 색칠 지도 |
 
 교안 PDF 다시 만들기: `python tools/build_guide.py` (그림: `python tools/make_figures.py`)
 
@@ -52,5 +54,7 @@ uvicorn service.main:app --reload     # http://127.0.0.1:8000 , API 문서 /docs
 
 서울 열린데이터광장 「서울시 상권분석서비스」 추정매출 · 점포 · 길단위인구 · 상주인구 · 직장인구 (행정동),
 공공누리 제1유형 (출처 표시). 매출은 카드 결제 등으로 계산한 **추정값**입니다.
+
+지도(9장): 커피숍 위치 - 서울 열린데이터광장 「서울시 휴게음식점 인허가 정보」 · 행정동 경계 - 통계청 SGIS(공공누리 제1유형), 가공 [vuski/admdongkor](https://github.com/vuski/admdongkor) (CC BY 4.0) · 바탕 지도 © OpenStreetMap 기여자
 
 강사 김대철
